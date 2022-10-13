@@ -12,13 +12,15 @@ struct ContentView: View {
 
     @Environment(\.colorScheme) var colorScheme
 
+    @State var selectedColorScheme = 0
+
     var body: some View {
-        let lightMode = colorScheme == .light
+        let lightMode = (colorScheme == .light && selectedColorScheme == 0) || selectedColorScheme == 1
         ZStack {
             BackgroundView(lightMode: lightMode)
             VStack {
                 Spacer()
-                SettingsButtonView(lightMode: lightMode)
+                SettingsButtonView(selectedColorScheme: $selectedColorScheme, lightMode: lightMode)
             }
         }
     }
@@ -38,10 +40,12 @@ struct BackgroundView: View {
 
 struct SettingsButtonView: View {
 
+    @Binding var selectedColorScheme: Int
+
     let lightMode: Bool
 
     var body: some View {
-        NavigationLink("Settings", destination: SettingsView())
+        NavigationLink("Settings", destination: SettingsView(selectedColorScheme: $selectedColorScheme, lightMode: lightMode))
                 .font(.system(size: 20, weight: .bold, design: .default))
                 .frame(width: deviceWidth - 120, height: 50)
                 .foregroundColor(lightMode ? lightblue : .white)

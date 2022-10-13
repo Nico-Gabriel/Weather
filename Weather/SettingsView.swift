@@ -2,17 +2,17 @@ import SwiftUI
 
 struct SettingsView: View {
 
-    @State var selectedFlavor = 3
+    @Binding var selectedColorScheme: Int
+
+    let lightMode: Bool
 
     var body: some View {
-        VStack {
-            Form {
-                List {
-                    Picker("Flavor", selection: $selectedFlavor) {
-                        Text("Chocolate").tag(1)
-                        Text("Vanilla").tag(2)
-                        Text("Strawberry").tag(3)
-                    }
+        Form {
+            List {
+                Picker("Appearance", selection: $selectedColorScheme) {
+                    Text("System default").tag(0)
+                    Text("Light mode").tag(1)
+                    Text("Dark mode").tag(2)
                 }
             }
         }
