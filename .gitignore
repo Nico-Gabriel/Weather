@@ -1,0 +1,8 @@
+# ignore the idea folder
+.idea
+
+# ignore others
+.DS_Store
+Weather.xcodeproj
+Weather/Preview Content
+Weather/Assets.xcassets
