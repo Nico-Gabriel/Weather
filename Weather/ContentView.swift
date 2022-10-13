@@ -45,7 +45,7 @@ struct SettingsButtonView: View {
     let lightMode: Bool
 
     var body: some View {
-        NavigationLink("Settings", destination: SettingsView(selectedColorScheme: $selectedColorScheme, lightMode: lightMode))
+        NavigationLink("Settings", destination: SettingsView(selectedColorScheme: $selectedColorScheme))
                 .font(.system(size: 20, weight: .bold, design: .default))
                 .frame(width: deviceWidth - 120, height: 50)
                 .foregroundColor(lightMode ? lightblue : .white)

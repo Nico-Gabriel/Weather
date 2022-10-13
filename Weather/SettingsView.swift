@@ -4,8 +4,6 @@ struct SettingsView: View {
 
     @Binding var selectedColorScheme: Int
 
-    let lightMode: Bool
-
     var body: some View {
         Form {
             List {
