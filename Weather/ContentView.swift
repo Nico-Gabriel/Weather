@@ -10,9 +10,9 @@ let deviceHeight = CGFloat(UIScreen.main.bounds.height)
 
 struct ContentView: View {
 
-    @Environment(\.colorScheme) var colorScheme
-
     @State var selectedColorScheme = 0
+
+    let colorScheme: ColorScheme
 
     var body: some View {
         let lightMode = (colorScheme == .light && selectedColorScheme == 0) || selectedColorScheme == 1
@@ -23,6 +23,7 @@ struct ContentView: View {
                 SettingsButtonView(selectedColorScheme: $selectedColorScheme, lightMode: lightMode)
             }
         }
+                .preferredColorScheme(lightMode ? .light : .dark)
     }
 }
 
