@@ -52,6 +52,6 @@ struct SettingsButtonView: View {
                 .foregroundColor(lightMode ? lightblue : .white)
                 .background(lightMode ? .white : lightgray)
                 .cornerRadius(10)
-                .padding(.bottom, 30)
+                .padding(.bottom, 20)
     }
 }

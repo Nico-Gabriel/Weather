@@ -16,7 +16,7 @@ struct SettingsView: View {
                 }
             }
             Section(header: SectionHeaderTextView(text: "Location")) {
-                Toggle("Use location", isOn: $useLocation)
+                Toggle("Use current location", isOn: $useLocation)
             }
         }
                 .navigationTitle("Settings")
