@@ -11,7 +11,11 @@ let deviceHeight = CGFloat(UIScreen.main.bounds.height)
 struct ContentView: View {
 
     @State var selectedColorScheme = 0
+    @State var selectedTemperatureUnit = 0
+    @State var useCurrentLocation = true
+    @State var selectedLocation = 0
 
+    let cities = ["City 1", "City 2", "City 3"]
     let colorScheme: ColorScheme
 
     var body: some View {
@@ -20,7 +24,12 @@ struct ContentView: View {
             BackgroundView(lightMode: lightMode)
             VStack {
                 Spacer()
-                SettingsButtonView(selectedColorScheme: $selectedColorScheme, lightMode: lightMode)
+                SettingsButtonView(selectedColorScheme: $selectedColorScheme,
+                        selectedTemperatureUnit: $selectedTemperatureUnit,
+                        useCurrentLocation: $useCurrentLocation,
+                        selectedLocation: $selectedLocation,
+                        cities: cities,
+                        lightMode: lightMode)
             }
         }
                 .preferredColorScheme(lightMode ? .light : .dark)
@@ -42,11 +51,19 @@ struct BackgroundView: View {
 struct SettingsButtonView: View {
 
     @Binding var selectedColorScheme: Int
+    @Binding var selectedTemperatureUnit: Int
+    @Binding var useCurrentLocation: Bool
+    @Binding var selectedLocation: Int
 
+    let cities: [String]
     let lightMode: Bool
 
     var body: some View {
-        NavigationLink("Settings", destination: SettingsView(selectedColorScheme: $selectedColorScheme))
+        NavigationLink("Settings", destination: SettingsView(selectedColorScheme: $selectedColorScheme,
+                selectedTemperatureUnit: $selectedTemperatureUnit,
+                useCurrentLocation: $useCurrentLocation,
+                selectedLocation: $selectedLocation,
+                cities: cities))
                 .font(.system(size: 20, weight: .bold, design: .default))
                 .frame(width: deviceWidth - 120, height: 50)
                 .foregroundColor(lightMode ? lightblue : .white)
