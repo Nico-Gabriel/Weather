@@ -10,6 +10,7 @@ let deviceHeight = CGFloat(UIScreen.main.bounds.height)
 
 struct ContentView: View {
 
+    // this dummy data will be replaced by data from a weather api
     let location = "Vienna, AT"
     let days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
     let images = ["cloud.sun.fill", "cloud.sun.fill", "sun.max.fill", "sun.max.fill",
@@ -17,6 +18,7 @@ struct ContentView: View {
     let temperatures = [27, 28, 32, 31, 24, 23, 25]
 
     @State var showDetailedWeatherView = false
+    @State var dayForDetailedWeatherView = "---"
     @State var selectedColorScheme = 0
     @State var selectedTemperatureUnit = 0
     @State var useCurrentLocation = true
@@ -34,6 +36,7 @@ struct ContentView: View {
                 Spacer()
                 WeatherStatusView(imageName: images[0], temperature: temperatures[0])
                         .onTapGesture {
+                            dayForDetailedWeatherView = days[0]
                             showDetailedWeatherView = true
                         }
                 Spacer()
@@ -56,7 +59,9 @@ struct ContentView: View {
             }
         }
                 .sheet(isPresented: $showDetailedWeatherView) {
-                    DetailedWeatherView(showDetailedWeatherView: $showDetailedWeatherView, lightMode: lightMode)
+                    DetailedWeatherView(showDetailedWeatherView: $showDetailedWeatherView,
+                            dayForDetailedWeatherView: $dayForDetailedWeatherView,
+                            lightMode: lightMode)
                 }
                 .preferredColorScheme(lightMode ? .light : .dark)
     }
@@ -170,16 +175,18 @@ struct SettingsButtonView: View {
     let lightMode: Bool
 
     var body: some View {
-        NavigationLink("Settings", destination: SettingsView(selectedColorScheme: $selectedColorScheme,
+        NavigationLink(destination: SettingsView(selectedColorScheme: $selectedColorScheme,
                 selectedTemperatureUnit: $selectedTemperatureUnit,
                 useCurrentLocation: $useCurrentLocation,
                 selectedLocation: $selectedLocation,
-                cities: cities))
-                .font(.system(size: 20, weight: .bold, design: .default))
-                .frame(width: deviceWidth - 120, height: 50)
-                .foregroundColor(lightMode ? lightblue : .white)
-                .background(lightMode ? .white : lightgray)
-                .cornerRadius(10)
-                .padding(.bottom, 20)
+                cities: cities)) {
+            Text("Settings")
+                    .font(.system(size: 20, weight: .bold, design: .default))
+                    .frame(width: deviceWidth - 120, height: 50)
+                    .foregroundColor(lightMode ? lightblue : .white)
+                    .background(lightMode ? .white : lightgray)
+                    .cornerRadius(10)
+                    .padding(.bottom, 20)
+        }
     }
 }

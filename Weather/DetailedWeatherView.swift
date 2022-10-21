@@ -3,11 +3,12 @@ import SwiftUI
 struct DetailedWeatherView: View {
 
     @Binding var showDetailedWeatherView: Bool
+    @Binding var dayForDetailedWeatherView: String
 
     let lightMode: Bool
 
     var body: some View {
-        VStack {
+        ScrollView {
             Button {
                 showDetailedWeatherView = false
             } label: {
@@ -18,6 +19,7 @@ struct DetailedWeatherView: View {
                         .padding(.top, 4)
                         .padding()
             }
+            Text(dayForDetailedWeatherView)
         }
     }
 }
