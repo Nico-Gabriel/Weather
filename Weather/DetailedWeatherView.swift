@@ -8,18 +8,32 @@ struct DetailedWeatherView: View {
     let lightMode: Bool
 
     var body: some View {
-        ScrollView {
-            Button {
-                showDetailedWeatherView = false
-            } label: {
-                Image(systemName: "xmark.app.fill")
-                        .font(.system(size: 50))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                        .foregroundColor(lightMode ? .black : .white)
-                        .padding(.top, 4)
-                        .padding()
+        ZStack {
+            BackgroundView(lightMode: lightMode)
+            ScrollView {
+                ExitButtonView(showDetailedWeatherView: $showDetailedWeatherView, lightMode: lightMode)
+                Text(dayForDetailedWeatherView)
             }
-            Text(dayForDetailedWeatherView)
         }
+    }
+}
+
+struct ExitButtonView: View {
+
+    @Binding var showDetailedWeatherView: Bool
+
+    let lightMode: Bool
+
+    var body: some View {
+        Button {
+            showDetailedWeatherView = false
+        } label: {
+            Image(systemName: "xmark.app.fill")
+                    .font(.system(size: 50))
+                    .foregroundColor(lightMode ? .black : .white)
+        }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .padding(.top, 4)
+                .padding()
     }
 }
