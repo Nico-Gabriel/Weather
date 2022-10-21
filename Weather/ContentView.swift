@@ -12,7 +12,7 @@ struct ContentView: View {
 
     // this dummy data will be replaced by data from a weather api
     let location = "Vienna, AT"
-    let days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
+    let days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
     let images = ["cloud.sun.fill", "cloud.sun.fill", "sun.max.fill", "sun.max.fill",
                   "cloud.rain.fill", "wind", "cloud.fill"]
     let temperatures = [27, 28, 32, 31, 24, 23, 25]
@@ -41,11 +41,13 @@ struct ContentView: View {
                         }
                 Spacer()
                 WeatherForecast(showDetailedWeatherView: $showDetailedWeatherView,
+                        dayForDetailedWeatherView: $dayForDetailedWeatherView,
                         days: [days[1], days[2], days[3]],
                         images: [images[1], images[2], images[3]],
                         temperatures: [temperatures[1], temperatures[2], temperatures[3]])
                 Spacer()
                 WeatherForecast(showDetailedWeatherView: $showDetailedWeatherView,
+                        dayForDetailedWeatherView: $dayForDetailedWeatherView,
                         days: [days[4], days[5], days[6]],
                         images: [images[4], images[5], images[6]],
                         temperatures: [temperatures[4], temperatures[5], temperatures[6]])
@@ -113,14 +115,16 @@ struct WeatherStatusView: View {
 struct WeatherDayView: View {
 
     @Binding var showDetailedWeatherView: Bool
+    @Binding var dayForDetailedWeatherView: String
 
-    let dayOfWeek: String
+    let days: [String]
+    let dayIndex: Int
     let imageName: String
     let temperature: Int
 
     var body: some View {
         VStack {
-            Text(dayOfWeek)
+            Text(days[dayIndex].prefix(3))
                     .font(.system(size: 16, weight: .medium, design: .default))
                     .foregroundColor(.white)
             Image(systemName: imageName)
@@ -133,6 +137,7 @@ struct WeatherDayView: View {
                     .foregroundColor(.white)
         }
                 .onTapGesture {
+                    dayForDetailedWeatherView = days[dayIndex]
                     showDetailedWeatherView = true
                 }
     }
@@ -141,6 +146,7 @@ struct WeatherDayView: View {
 struct WeatherForecast: View {
 
     @Binding var showDetailedWeatherView: Bool
+    @Binding var dayForDetailedWeatherView: String
 
     let days: [String]
     let images: [String]
@@ -149,15 +155,21 @@ struct WeatherForecast: View {
     var body: some View {
         HStack(spacing: 54) {
             WeatherDayView(showDetailedWeatherView: $showDetailedWeatherView,
-                    dayOfWeek: days[0],
+                    dayForDetailedWeatherView: $dayForDetailedWeatherView,
+                    days: days,
+                    dayIndex: 0,
                     imageName: images[0],
                     temperature: temperatures[0])
             WeatherDayView(showDetailedWeatherView: $showDetailedWeatherView,
-                    dayOfWeek: days[1],
+                    dayForDetailedWeatherView: $dayForDetailedWeatherView,
+                    days: days,
+                    dayIndex: 1,
                     imageName: images[1],
                     temperature: temperatures[1])
             WeatherDayView(showDetailedWeatherView: $showDetailedWeatherView,
-                    dayOfWeek: days[2],
+                    dayForDetailedWeatherView: $dayForDetailedWeatherView,
+                    days: days,
+                    dayIndex: 2,
                     imageName: images[2],
                     temperature: temperatures[2])
         }
