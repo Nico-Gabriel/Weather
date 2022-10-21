@@ -10,6 +10,13 @@ let deviceHeight = CGFloat(UIScreen.main.bounds.height)
 
 struct ContentView: View {
 
+    let location = "Vienna, AT"
+    let days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
+    let images = ["cloud.sun.fill", "cloud.sun.fill", "sun.max.fill", "sun.max.fill",
+                  "cloud.rain.fill", "wind", "cloud.fill"]
+    let temperatures = [27, 28, 32, 31, 24, 23, 25]
+
+    @State var showDetailedWeatherView = false
     @State var selectedColorScheme = 0
     @State var selectedTemperatureUnit = 0
     @State var useCurrentLocation = true
@@ -23,6 +30,22 @@ struct ContentView: View {
         ZStack {
             BackgroundView(lightMode: lightMode)
             VStack {
+                LocationTextView(location: location)
+                Spacer()
+                WeatherStatusView(imageName: images[0], temperature: temperatures[0])
+                        .onTapGesture {
+                            showDetailedWeatherView = true
+                        }
+                Spacer()
+                WeatherForecast(showDetailedWeatherView: $showDetailedWeatherView,
+                        days: [days[1], days[2], days[3]],
+                        images: [images[1], images[2], images[3]],
+                        temperatures: [temperatures[1], temperatures[2], temperatures[3]])
+                Spacer()
+                WeatherForecast(showDetailedWeatherView: $showDetailedWeatherView,
+                        days: [days[4], days[5], days[6]],
+                        images: [images[4], images[5], images[6]],
+                        temperatures: [temperatures[4], temperatures[5], temperatures[6]])
                 Spacer()
                 SettingsButtonView(selectedColorScheme: $selectedColorScheme,
                         selectedTemperatureUnit: $selectedTemperatureUnit,
@@ -32,6 +55,9 @@ struct ContentView: View {
                         lightMode: lightMode)
             }
         }
+                .sheet(isPresented: $showDetailedWeatherView) {
+                    DetailedWeatherView(showDetailedWeatherView: $showDetailedWeatherView, lightMode: lightMode)
+                }
                 .preferredColorScheme(lightMode ? .light : .dark)
     }
 }
@@ -45,6 +71,91 @@ struct BackgroundView: View {
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing)
                 .edgesIgnoringSafeArea(.all)
+    }
+}
+
+struct LocationTextView: View {
+
+    let location: String
+
+    var body: some View {
+        Text(location)
+                .font(.system(size: 32, weight: .medium, design: .default))
+                .foregroundColor(.white)
+                .padding(.top, 30)
+    }
+}
+
+struct WeatherStatusView: View {
+
+    let imageName: String
+    let temperature: Int
+
+    var body: some View {
+        VStack(spacing: 10) {
+            Image(systemName: imageName)
+                    .renderingMode(.original)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: (deviceWidth / 100) * 50, height: (deviceHeight / 100) * 20)
+            Text("\(temperature)°")
+                    .font(.system(size: 70, weight: .medium))
+                    .foregroundColor(.white)
+        }
+    }
+}
+
+struct WeatherDayView: View {
+
+    @Binding var showDetailedWeatherView: Bool
+
+    let dayOfWeek: String
+    let imageName: String
+    let temperature: Int
+
+    var body: some View {
+        VStack {
+            Text(dayOfWeek)
+                    .font(.system(size: 16, weight: .medium, design: .default))
+                    .foregroundColor(.white)
+            Image(systemName: imageName)
+                    .renderingMode(.original)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 40, height: 40)
+            Text("\(temperature)°")
+                    .font(.system(size: 28, weight: .medium))
+                    .foregroundColor(.white)
+        }
+                .onTapGesture {
+                    showDetailedWeatherView = true
+                }
+    }
+}
+
+struct WeatherForecast: View {
+
+    @Binding var showDetailedWeatherView: Bool
+
+    let days: [String]
+    let images: [String]
+    let temperatures: [Int]
+
+    var body: some View {
+        HStack(spacing: 54) {
+            WeatherDayView(showDetailedWeatherView: $showDetailedWeatherView,
+                    dayOfWeek: days[0],
+                    imageName: images[0],
+                    temperature: temperatures[0])
+            WeatherDayView(showDetailedWeatherView: $showDetailedWeatherView,
+                    dayOfWeek: days[1],
+                    imageName: images[1],
+                    temperature: temperatures[1])
+            WeatherDayView(showDetailedWeatherView: $showDetailedWeatherView,
+                    dayOfWeek: days[2],
+                    imageName: images[2],
+                    temperature: temperatures[2])
+        }
     }
 }
 
