@@ -12,6 +12,13 @@ struct ContentView: View {
 
     // this dummy data will be replaced by data from a weather api
     let location = "Vienna, AT"
+    let weatherForecasts = [Weather(weekday: "MONDAY", icon: "cloud.sun.fill", temperature: 27),
+                            Weather(weekday: "TUESDAY", icon: "cloud.sun.fill", temperature: 28),
+                            Weather(weekday: "WEDNESDAY", icon: "sun.max.fill", temperature: 32),
+                            Weather(weekday: "THURSDAY", icon: "sun.max.fill", temperature: 31),
+                            Weather(weekday: "FRIDAY", icon: "cloud.rain.fill", temperature: 24),
+                            Weather(weekday: "SATURDAY", icon: "wind", temperature: 23),
+                            Weather(weekday: "SUNDAY", icon: "cloud.fill", temperature: 25)]
     let days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
     let images = ["cloud.sun.fill", "cloud.sun.fill", "sun.max.fill", "sun.max.fill",
                   "cloud.rain.fill", "wind", "cloud.fill"]
