@@ -2,8 +2,8 @@ import SwiftUI
 
 struct DetailedWeatherView: View {
 
+    @Binding var weather: Weather
     @Binding var showDetailedWeatherView: Bool
-    @Binding var dayForDetailedWeatherView: String
 
     let lightMode: Bool
 
@@ -12,7 +12,7 @@ struct DetailedWeatherView: View {
             BackgroundView(lightMode: lightMode)
             ScrollView {
                 ExitButtonView(showDetailedWeatherView: $showDetailedWeatherView, lightMode: lightMode)
-                Text(dayForDetailedWeatherView)
+                Text(weather.weekday)
             }
         }
     }

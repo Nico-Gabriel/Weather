@@ -19,13 +19,9 @@ struct ContentView: View {
                             Weather(weekday: "FRIDAY", icon: "cloud.rain.fill", temperature: 24),
                             Weather(weekday: "SATURDAY", icon: "wind", temperature: 23),
                             Weather(weekday: "SUNDAY", icon: "cloud.fill", temperature: 25)]
-    let days = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
-    let images = ["cloud.sun.fill", "cloud.sun.fill", "sun.max.fill", "sun.max.fill",
-                  "cloud.rain.fill", "wind", "cloud.fill"]
-    let temperatures = [27, 28, 32, 31, 24, 23, 25]
 
+    @State var weatherForDetailedView = Weather(weekday: "---", icon: "---", temperature: 0)
     @State var showDetailedWeatherView = false
-    @State var dayForDetailedWeatherView = "---"
     @State var selectedColorScheme = 0
     @State var selectedTemperatureUnit = 0
     @State var useCurrentLocation = true
@@ -41,23 +37,17 @@ struct ContentView: View {
             VStack {
                 LocationTextView(location: location)
                 Spacer()
-                WeatherStatusView(imageName: images[0], temperature: temperatures[0])
-                        .onTapGesture {
-                            dayForDetailedWeatherView = days[0]
-                            showDetailedWeatherView = true
-                        }
+                WeatherStatusView(weatherForDetailedView: $weatherForDetailedView,
+                        showDetailedWeatherView: $showDetailedWeatherView,
+                        currentWeather: weatherForecasts[0])
                 Spacer()
-                WeatherForecast(showDetailedWeatherView: $showDetailedWeatherView,
-                        dayForDetailedWeatherView: $dayForDetailedWeatherView,
-                        days: [days[1], days[2], days[3]],
-                        images: [images[1], images[2], images[3]],
-                        temperatures: [temperatures[1], temperatures[2], temperatures[3]])
+                WeatherForecast(weatherForDetailedView: $weatherForDetailedView,
+                        showDetailedWeatherView: $showDetailedWeatherView,
+                        weathers: [weatherForecasts[1], weatherForecasts[2], weatherForecasts[3]])
                 Spacer()
-                WeatherForecast(showDetailedWeatherView: $showDetailedWeatherView,
-                        dayForDetailedWeatherView: $dayForDetailedWeatherView,
-                        days: [days[4], days[5], days[6]],
-                        images: [images[4], images[5], images[6]],
-                        temperatures: [temperatures[4], temperatures[5], temperatures[6]])
+                WeatherForecast(weatherForDetailedView: $weatherForDetailedView,
+                        showDetailedWeatherView: $showDetailedWeatherView,
+                        weathers: [weatherForecasts[4], weatherForecasts[5], weatherForecasts[6]])
                 Spacer()
                 SettingsButtonView(selectedColorScheme: $selectedColorScheme,
                         selectedTemperatureUnit: $selectedTemperatureUnit,
@@ -68,8 +58,8 @@ struct ContentView: View {
             }
         }
                 .sheet(isPresented: $showDetailedWeatherView) {
-                    DetailedWeatherView(showDetailedWeatherView: $showDetailedWeatherView,
-                            dayForDetailedWeatherView: $dayForDetailedWeatherView,
+                    DetailedWeatherView(weather: $weatherForDetailedView,
+                            showDetailedWeatherView: $showDetailedWeatherView,
                             lightMode: lightMode)
                 }
                 .preferredColorScheme(lightMode ? .light : .dark)
@@ -102,49 +92,52 @@ struct LocationTextView: View {
 
 struct WeatherStatusView: View {
 
-    let imageName: String
-    let temperature: Int
+    @Binding var weatherForDetailedView: Weather
+    @Binding var showDetailedWeatherView: Bool
+
+    let currentWeather: Weather
 
     var body: some View {
         VStack(spacing: 10) {
-            Image(systemName: imageName)
+            Image(systemName: currentWeather.icon)
                     .renderingMode(.original)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: (deviceWidth / 100) * 50, height: (deviceHeight / 100) * 20)
-            Text("\(temperature)°")
+            Text("\(currentWeather.temperature)°")
                     .font(.system(size: 70, weight: .medium))
                     .foregroundColor(.white)
         }
+                .onTapGesture {
+                    weatherForDetailedView = currentWeather
+                    showDetailedWeatherView = true
+                }
     }
 }
 
 struct WeatherDayView: View {
 
+    @Binding var weatherForDetailedView: Weather
     @Binding var showDetailedWeatherView: Bool
-    @Binding var dayForDetailedWeatherView: String
 
-    let days: [String]
-    let dayIndex: Int
-    let imageName: String
-    let temperature: Int
+    let weather: Weather
 
     var body: some View {
         VStack {
-            Text(days[dayIndex].prefix(3))
+            Text(weather.weekday.prefix(3))
                     .font(.system(size: 16, weight: .medium, design: .default))
                     .foregroundColor(.white)
-            Image(systemName: imageName)
+            Image(systemName: weather.icon)
                     .renderingMode(.original)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 40, height: 40)
-            Text("\(temperature)°")
+            Text("\(weather.temperature)°")
                     .font(.system(size: 28, weight: .medium))
                     .foregroundColor(.white)
         }
                 .onTapGesture {
-                    dayForDetailedWeatherView = days[dayIndex]
+                    weatherForDetailedView = weather
                     showDetailedWeatherView = true
                 }
     }
@@ -152,33 +145,22 @@ struct WeatherDayView: View {
 
 struct WeatherForecast: View {
 
+    @Binding var weatherForDetailedView: Weather
     @Binding var showDetailedWeatherView: Bool
-    @Binding var dayForDetailedWeatherView: String
 
-    let days: [String]
-    let images: [String]
-    let temperatures: [Int]
+    let weathers: [Weather]
 
     var body: some View {
         HStack(spacing: 54) {
-            WeatherDayView(showDetailedWeatherView: $showDetailedWeatherView,
-                    dayForDetailedWeatherView: $dayForDetailedWeatherView,
-                    days: days,
-                    dayIndex: 0,
-                    imageName: images[0],
-                    temperature: temperatures[0])
-            WeatherDayView(showDetailedWeatherView: $showDetailedWeatherView,
-                    dayForDetailedWeatherView: $dayForDetailedWeatherView,
-                    days: days,
-                    dayIndex: 1,
-                    imageName: images[1],
-                    temperature: temperatures[1])
-            WeatherDayView(showDetailedWeatherView: $showDetailedWeatherView,
-                    dayForDetailedWeatherView: $dayForDetailedWeatherView,
-                    days: days,
-                    dayIndex: 2,
-                    imageName: images[2],
-                    temperature: temperatures[2])
+            WeatherDayView(weatherForDetailedView: $weatherForDetailedView,
+                    showDetailedWeatherView: $showDetailedWeatherView,
+                    weather: weathers[0])
+            WeatherDayView(weatherForDetailedView: $weatherForDetailedView,
+                    showDetailedWeatherView: $showDetailedWeatherView,
+                    weather: weathers[1])
+            WeatherDayView(weatherForDetailedView: $weatherForDetailedView,
+                    showDetailedWeatherView: $showDetailedWeatherView,
+                    weather: weathers[2])
         }
     }
 }
