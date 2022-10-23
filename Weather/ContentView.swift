@@ -28,10 +28,9 @@ struct ContentView: View {
     @State var selectedLocation = 0
 
     let cities = ["City 1", "City 2", "City 3"]
-    let colorScheme: ColorScheme
 
     var body: some View {
-        let lightMode = (colorScheme == .light && selectedColorScheme == 0) || selectedColorScheme == 1
+        let lightMode = (selectedColorScheme == 0 && isSunUp()) || selectedColorScheme == 1
         ZStack {
             BackgroundView(lightMode: lightMode)
             VStack {
@@ -63,6 +62,10 @@ struct ContentView: View {
                             lightMode: lightMode)
                 }
                 .preferredColorScheme(lightMode ? .light : .dark)
+    }
+
+    func isSunUp() -> Bool {
+        true
     }
 }
 

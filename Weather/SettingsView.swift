@@ -39,7 +39,7 @@ struct GeneralSettingsView: View {
     var body: some View {
         Section(header: SectionHeaderTextView(text: "General settings")) {
             Picker("Appearance", selection: $selectedColorScheme) {
-                Text("System default").tag(0)
+                Text("Automatic").tag(0)
                 Text("Light mode").tag(1)
                 Text("Dark mode").tag(2)
             }
