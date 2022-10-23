@@ -35,7 +35,7 @@ struct ContentView: View {
         ZStack {
             BackgroundView(lightMode: lightMode)
             VStack {
-                LocationTextView(location: location)
+                LocationView(useCurrentLocation: $useCurrentLocation, location: location)
                 Spacer()
                 WeatherStatusView(weatherForDetailedView: $weatherForDetailedView,
                         showDetailedWeatherView: $showDetailedWeatherView,
@@ -78,15 +78,24 @@ struct BackgroundView: View {
     }
 }
 
-struct LocationTextView: View {
+struct LocationView: View {
+
+    @Binding var useCurrentLocation: Bool
 
     let location: String
 
     var body: some View {
-        Text(location)
-                .font(.system(size: 32, weight: .medium, design: .default))
+        HStack {
+            Text(location)
+                    .font(.system(size: 32, weight: .medium, design: .default))
+            if (useCurrentLocation) {
+                Image(systemName: "location.fill")
+                        .font(.system(size: 24))
+            }
+        }
                 .foregroundColor(.white)
                 .padding(.top, 30)
+
     }
 }
 
