@@ -1,3 +1,3 @@
 # Weather
 
-iOS weather app coded in swift/swiftui using apples weather api (weatherkit) to fetch weather data
+iOS weather app coded in swift/swiftui using a weather api (openweathermap) to fetch weather data
