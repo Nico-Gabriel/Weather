@@ -57,9 +57,10 @@ struct ContentView: View {
             }
         }
                 .sheet(isPresented: $showDetailedWeatherView) {
-                    DetailedWeatherView(weather: $weatherForDetailedView,
-                            showDetailedWeatherView: $showDetailedWeatherView,
-                            lightMode: lightMode)
+                    DetailedWeatherView(showDetailedWeatherView: $showDetailedWeatherView,
+                            weather: $weatherForDetailedView,
+                            lightMode: lightMode,
+                            location: location)
                 }
                 .preferredColorScheme(lightMode ? .light : .dark)
     }
