@@ -24,45 +24,43 @@ struct ContentView: View {
     @State var showDetailedWeatherView = false
     @State var selectedColorScheme = 0
     @State var selectedTemperatureUnit = 0
-    @State var useCurrentLocation = true
-    @State var selectedLocation = 0
 
-    let cities = ["City 1", "City 2", "City 3"]
+    let version = "1.0.0"
 
     var body: some View {
-        let lightMode = (selectedColorScheme == 0 && isSunUp()) || selectedColorScheme == 1
-        ZStack {
-            BackgroundView(lightMode: lightMode)
-            VStack {
-                LocationView(useCurrentLocation: $useCurrentLocation, location: location)
-                Spacer()
-                WeatherStatusView(weatherForDetailedView: $weatherForDetailedView,
-                        showDetailedWeatherView: $showDetailedWeatherView,
-                        currentWeather: weatherForecasts[0])
-                Spacer()
-                WeatherForecast(weatherForDetailedView: $weatherForDetailedView,
-                        showDetailedWeatherView: $showDetailedWeatherView,
-                        weathers: [weatherForecasts[1], weatherForecasts[2], weatherForecasts[3]])
-                Spacer()
-                WeatherForecast(weatherForDetailedView: $weatherForDetailedView,
-                        showDetailedWeatherView: $showDetailedWeatherView,
-                        weathers: [weatherForecasts[4], weatherForecasts[5], weatherForecasts[6]])
-                Spacer()
-                SettingsButtonView(selectedColorScheme: $selectedColorScheme,
-                        selectedTemperatureUnit: $selectedTemperatureUnit,
-                        useCurrentLocation: $useCurrentLocation,
-                        selectedLocation: $selectedLocation,
-                        cities: cities,
-                        lightMode: lightMode)
-            }
-        }
-                .sheet(isPresented: $showDetailedWeatherView) {
-                    DetailedWeatherView(showDetailedWeatherView: $showDetailedWeatherView,
-                            weather: $weatherForDetailedView,
+        NavigationView {
+            let lightMode = (selectedColorScheme == 0 && isSunUp()) || selectedColorScheme == 1
+            ZStack {
+                BackgroundView(lightMode: lightMode)
+                VStack {
+                    LocationView(location: location)
+                    Spacer()
+                    WeatherStatusView(weatherForDetailedView: $weatherForDetailedView,
+                            showDetailedWeatherView: $showDetailedWeatherView,
+                            currentWeather: weatherForecasts[0])
+                    Spacer()
+                    WeatherForecast(weatherForDetailedView: $weatherForDetailedView,
+                            showDetailedWeatherView: $showDetailedWeatherView,
+                            weathers: [weatherForecasts[1], weatherForecasts[2], weatherForecasts[3]])
+                    Spacer()
+                    WeatherForecast(weatherForDetailedView: $weatherForDetailedView,
+                            showDetailedWeatherView: $showDetailedWeatherView,
+                            weathers: [weatherForecasts[4], weatherForecasts[5], weatherForecasts[6]])
+                    Spacer()
+                    SettingsButtonView(selectedColorScheme: $selectedColorScheme,
+                            selectedTemperatureUnit: $selectedTemperatureUnit,
                             lightMode: lightMode,
-                            location: location)
+                            version: version)
                 }
-                .preferredColorScheme(lightMode ? .light : .dark)
+            }
+                    .sheet(isPresented: $showDetailedWeatherView) {
+                        DetailedWeatherView(showDetailedWeatherView: $showDetailedWeatherView,
+                                weather: $weatherForDetailedView,
+                                lightMode: lightMode,
+                                location: location)
+                    }
+                    .preferredColorScheme(lightMode ? .light : .dark)
+        }
     }
 
     func isSunUp() -> Bool {
@@ -84,22 +82,17 @@ struct BackgroundView: View {
 
 struct LocationView: View {
 
-    @Binding var useCurrentLocation: Bool
-
     let location: String
 
     var body: some View {
         HStack {
             Text(location)
                     .font(.system(size: 32, weight: .medium, design: .default))
-            if (useCurrentLocation) {
-                Image(systemName: "location.fill")
-                        .font(.system(size: 24))
-            }
+            Image(systemName: "location.fill")
+                    .font(.system(size: 24))
         }
                 .foregroundColor(.white)
                 .padding(.top, 30)
-
     }
 }
 
@@ -182,18 +175,14 @@ struct SettingsButtonView: View {
 
     @Binding var selectedColorScheme: Int
     @Binding var selectedTemperatureUnit: Int
-    @Binding var useCurrentLocation: Bool
-    @Binding var selectedLocation: Int
 
-    let cities: [String]
     let lightMode: Bool
+    let version: String
 
     var body: some View {
         NavigationLink(destination: SettingsView(selectedColorScheme: $selectedColorScheme,
                 selectedTemperatureUnit: $selectedTemperatureUnit,
-                useCurrentLocation: $useCurrentLocation,
-                selectedLocation: $selectedLocation,
-                cities: cities)) {
+                version: version)) {
             Text("Settings")
                     .font(.system(size: 20, weight: .bold, design: .default))
                     .frame(width: deviceWidth - 120, height: 50)

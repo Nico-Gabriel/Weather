@@ -4,45 +4,46 @@ struct SettingsView: View {
 
     @Binding var selectedColorScheme: Int
     @Binding var selectedTemperatureUnit: Int
-    @Binding var useCurrentLocation: Bool
-    @Binding var selectedLocation: Int
 
-    let cities: [String]
+    @State var showMoreInformationView = false
+
+    let version: String
 
     var body: some View {
         Form {
-            GeneralSettingsView(selectedColorScheme: $selectedColorScheme,
-                    selectedTemperatureUnit: $selectedTemperatureUnit)
-            LocationSettingsView(useCurrentLocation: $useCurrentLocation,
-                    selectedLocation: $selectedLocation,
-                    cities: cities)
+            AppearanceSettingsView(selectedColorScheme: $selectedColorScheme)
+            TemperatureUnitSettingsView(selectedTemperatureUnit: $selectedTemperatureUnit)
+            LocationInformationView()
+            AboutInformationView(showMoreInformationView: $showMoreInformationView, version: version)
         }
                 .navigationTitle("Settings")
+                .sheet(isPresented: $showMoreInformationView) {
+                    MoreInformationView()
+                }
     }
 }
 
-struct SectionHeaderTextView: View {
-
-    let text: String
-
-    var body: some View {
-        Text(text)
-                .padding(.leading, -20)
-    }
-}
-
-struct GeneralSettingsView: View {
+struct AppearanceSettingsView: View {
 
     @Binding var selectedColorScheme: Int
-    @Binding var selectedTemperatureUnit: Int
 
     var body: some View {
-        Section(header: SectionHeaderTextView(text: "General settings")) {
+        Section(header: Text("Appearance"), footer: Text("abc123...")) {
             Picker("Appearance", selection: $selectedColorScheme) {
                 Text("Automatic").tag(0)
                 Text("Light mode").tag(1)
                 Text("Dark mode").tag(2)
             }
+        }
+    }
+}
+
+struct TemperatureUnitSettingsView: View {
+
+    @Binding var selectedTemperatureUnit: Int
+
+    var body: some View {
+        Section(header: Text("Temperature unit"), footer: Text("abc123...")) {
             Picker("Temperature unit", selection: $selectedTemperatureUnit) {
                 Text("Celsius (°C)").tag(0)
                 Text("Fahrenheit (°F)").tag(1)
@@ -52,22 +53,32 @@ struct GeneralSettingsView: View {
     }
 }
 
-struct LocationSettingsView: View {
-
-    @Binding var useCurrentLocation: Bool
-    @Binding var selectedLocation: Int
-
-    let cities: [String]
+struct LocationInformationView: View {
 
     var body: some View {
-        Section(header: SectionHeaderTextView(text: "Location")) {
-            Toggle("Use current location", isOn: $useCurrentLocation)
-            if (!useCurrentLocation) {
-                Picker("Location", selection: $selectedLocation) {
-                    ForEach(cities.indices, id: \.self) { index in
-                        Text(cities[index]).tag(index)
-                    }
-                }
+        Section(header: Text("Location"), footer: Text("abc123...")) {
+            Text("Current location")
+        }
+    }
+}
+
+struct AboutInformationView: View {
+
+    @Binding var showMoreInformationView: Bool
+
+    let version: String
+
+    var body: some View {
+        Section(header: Text("About")) {
+            HStack {
+                Text("Version")
+                Spacer()
+                Text(version)
+            }
+            Button{
+                showMoreInformationView = true
+            } label: {
+                Text("More information")
             }
         }
     }
