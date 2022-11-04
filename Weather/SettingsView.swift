@@ -18,7 +18,7 @@ struct SettingsView: View {
         }
                 .navigationTitle("Settings")
                 .sheet(isPresented: $showMoreInformationView) {
-                    MoreInformationView()
+                    MoreInformationView(showMoreInformationView: $showMoreInformationView)
                 }
     }
 }

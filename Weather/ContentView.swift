@@ -184,12 +184,12 @@ struct SettingsButtonView: View {
                 selectedTemperatureUnit: $selectedTemperatureUnit,
                 version: version)) {
             Text("Settings")
-                    .font(.system(size: 20, weight: .bold, design: .default))
+                    .font(.system(size: 18, weight: .bold, design: .default))
                     .frame(width: deviceWidth - 120, height: 50)
                     .foregroundColor(lightMode ? lightblue : .white)
                     .background(lightMode ? .white : lightgray)
                     .cornerRadius(10)
-                    .padding(.bottom, 20)
         }
+                .padding(.bottom, 20)
     }
 }
