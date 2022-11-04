@@ -1,5 +1,3 @@
-// TEST
-
 import SwiftUI
 
 let lightblue = Color(red: 0.36, green: 0.7, blue: 1)
