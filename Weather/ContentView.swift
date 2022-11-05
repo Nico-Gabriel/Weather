@@ -28,8 +28,37 @@ struct ContentView: View {
     let version = "1.0.0"
 
     var body: some View {
+        WeatherView(location: location,
+                weatherForecasts: weatherForecasts,
+                weatherForDetailedView: $weatherForDetailedView,
+                showDetailedWeatherView: $showDetailedWeatherView,
+                selectedColorScheme: $selectedColorScheme,
+                selectedTemperatureUnit: $selectedTemperatureUnit,
+                isSunUp: isSunUp(),
+                version: version)
+    }
+
+    func isSunUp() -> Bool {
+        true
+    }
+}
+
+struct WeatherView: View {
+
+    let location: String
+    let weatherForecasts: [Weather]
+
+    @Binding var weatherForDetailedView: Weather
+    @Binding var showDetailedWeatherView: Bool
+    @Binding var selectedColorScheme: Int
+    @Binding var selectedTemperatureUnit: Int
+
+    let isSunUp: Bool
+    let version: String
+
+    var body: some View {
         NavigationView {
-            let lightMode = (selectedColorScheme == 0 && isSunUp()) || selectedColorScheme == 1
+            let lightMode = (selectedColorScheme == 0 && isSunUp) || selectedColorScheme == 1
             ZStack {
                 BackgroundView(lightMode: lightMode)
                 VStack {
@@ -61,10 +90,6 @@ struct ContentView: View {
                     }
                     .preferredColorScheme(lightMode ? .light : .dark)
         }
-    }
-
-    func isSunUp() -> Bool {
-        true
     }
 }
 
