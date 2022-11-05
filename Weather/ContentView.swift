@@ -10,32 +10,39 @@ let deviceHeight = CGFloat(UIScreen.main.bounds.height)
 
 struct ContentView: View {
 
-    // this dummy data will be replaced by data from a weather api
-    let location = "Vienna, AT"
-    let weatherForecasts = [Weather(weekday: "MONDAY", icon: "cloud.sun.fill", temperature: 27),
-                            Weather(weekday: "TUESDAY", icon: "cloud.sun.fill", temperature: 28),
-                            Weather(weekday: "WEDNESDAY", icon: "sun.max.fill", temperature: 32),
-                            Weather(weekday: "THURSDAY", icon: "sun.max.fill", temperature: 31),
-                            Weather(weekday: "FRIDAY", icon: "cloud.rain.fill", temperature: 24),
-                            Weather(weekday: "SATURDAY", icon: "wind", temperature: 23),
-                            Weather(weekday: "SUNDAY", icon: "cloud.fill", temperature: 25)]
-
-    @State var weatherForDetailedView = Weather(weekday: "---", icon: "---", temperature: 0)
-    @State var showDetailedWeatherView = false
     @State var selectedColorScheme = 0
     @State var selectedTemperatureUnit = 0
 
     let version = "1.0.0"
 
     var body: some View {
-        WeatherView(location: location,
-                weatherForecasts: weatherForecasts,
-                weatherForDetailedView: $weatherForDetailedView,
-                showDetailedWeatherView: $showDetailedWeatherView,
-                selectedColorScheme: $selectedColorScheme,
-                selectedTemperatureUnit: $selectedTemperatureUnit,
-                isSunUp: isSunUp(),
-                version: version)
+        let weatherForecasts = getWeatherData()
+        let location = getLocation()
+        let lightMode = (selectedColorScheme == 0 && isSunUp()) || selectedColorScheme == 1
+        if (weatherForecasts.isEmpty) {
+            NoWeatherDataView(lightMode: lightMode)
+        } else {
+            WeatherView(selectedColorScheme: $selectedColorScheme,
+                    selectedTemperatureUnit: $selectedTemperatureUnit,
+                    weatherForecasts: weatherForecasts,
+                    location: location,
+                    lightMode: lightMode,
+                    version: version)
+        }
+    }
+
+    func getWeatherData() -> [Weather] {
+        [Weather(weekday: "MONDAY", icon: "cloud.sun.fill", temperature: 27),
+         Weather(weekday: "TUESDAY", icon: "cloud.sun.fill", temperature: 28),
+         Weather(weekday: "WEDNESDAY", icon: "sun.max.fill", temperature: 32),
+         Weather(weekday: "THURSDAY", icon: "sun.max.fill", temperature: 31),
+         Weather(weekday: "FRIDAY", icon: "cloud.rain.fill", temperature: 24),
+         Weather(weekday: "SATURDAY", icon: "wind", temperature: 23),
+         Weather(weekday: "SUNDAY", icon: "cloud.fill", temperature: 25)]
+    }
+
+    func getLocation() -> String {
+        "Vienna, AT"
     }
 
     func isSunUp() -> Bool {
@@ -45,20 +52,19 @@ struct ContentView: View {
 
 struct WeatherView: View {
 
-    let location: String
-    let weatherForecasts: [Weather]
-
-    @Binding var weatherForDetailedView: Weather
-    @Binding var showDetailedWeatherView: Bool
     @Binding var selectedColorScheme: Int
     @Binding var selectedTemperatureUnit: Int
 
-    let isSunUp: Bool
+    let weatherForecasts: [Weather]
+    let location: String
+    let lightMode: Bool
     let version: String
+
+    @State var weatherForDetailedView = Weather(weekday: "---", icon: "---", temperature: 0)
+    @State var showDetailedWeatherView = false
 
     var body: some View {
         NavigationView {
-            let lightMode = (selectedColorScheme == 0 && isSunUp) || selectedColorScheme == 1
             ZStack {
                 BackgroundView(lightMode: lightMode)
                 VStack {
@@ -89,6 +95,20 @@ struct WeatherView: View {
                                 location: location)
                     }
                     .preferredColorScheme(lightMode ? .light : .dark)
+        }
+    }
+}
+
+struct NoWeatherDataView: View {
+
+    let lightMode: Bool
+
+    var body: some View {
+        ZStack {
+            BackgroundView(lightMode: lightMode)
+            Text("no weather data")
+                    .foregroundColor(.white)
+                    .font(.system(size: 24, weight: .semibold))
         }
     }
 }
