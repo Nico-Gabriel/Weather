@@ -10,6 +10,8 @@ let deviceHeight = CGFloat(UIScreen.main.bounds.height)
 
 struct ContentView: View {
 
+    @Environment(\.colorScheme) var colorScheme
+
     @State var selectedColorScheme = 0
     @State var selectedTemperatureUnit = 0
 
@@ -17,16 +19,14 @@ struct ContentView: View {
 
     var body: some View {
         let weatherForecasts = getWeatherData()
-        let location = getLocation()
-        let lightMode = (selectedColorScheme == 0 && isSunUp()) || selectedColorScheme == 1
         if (weatherForecasts.isEmpty) {
-            NoWeatherDataView(lightMode: lightMode)
+            NoWeatherDataView(lightMode: colorScheme == .light)
         } else {
             WeatherView(selectedColorScheme: $selectedColorScheme,
                     selectedTemperatureUnit: $selectedTemperatureUnit,
                     weatherForecasts: weatherForecasts,
-                    location: location,
-                    lightMode: lightMode,
+                    location: getLocation(),
+                    isSunUp: isSunUp(),
                     version: version)
         }
     }
@@ -57,13 +57,14 @@ struct WeatherView: View {
 
     let weatherForecasts: [Weather]
     let location: String
-    let lightMode: Bool
+    let isSunUp: Bool
     let version: String
 
     @State var weatherForDetailedView = Weather(weekday: "---", icon: "---", temperature: 0)
     @State var showDetailedWeatherView = false
 
     var body: some View {
+        let lightMode = (selectedColorScheme == 0 && isSunUp) || selectedColorScheme == 1
         NavigationView {
             ZStack {
                 BackgroundView(lightMode: lightMode)
