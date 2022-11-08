@@ -228,6 +228,7 @@ struct SettingsButtonView: View {
     var body: some View {
         NavigationLink(destination: SettingsView(selectedColorScheme: $selectedColorScheme,
                 selectedTemperatureUnit: $selectedTemperatureUnit,
+                lightMode: lightMode,
                 version: version)) {
             Text("Settings")
                     .font(.system(size: 18, weight: .bold, design: .default))

@@ -7,6 +7,7 @@ struct SettingsView: View {
 
     @State var showMoreInformationView = false
 
+    let lightMode: Bool
     let version: String
 
     var body: some View {
@@ -18,7 +19,7 @@ struct SettingsView: View {
         }
                 .navigationTitle("Settings")
                 .sheet(isPresented: $showMoreInformationView) {
-                    MoreInformationView(showMoreInformationView: $showMoreInformationView)
+                    MoreInformationView(showMoreInformationView: $showMoreInformationView, lightMode: lightMode)
                 }
     }
 }
