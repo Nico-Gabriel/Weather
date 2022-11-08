@@ -41,6 +41,9 @@ struct AppearanceDescriptionView: View {
                     .padding(.top, 68)
                     .padding(.bottom, -10)
             Text("Description for the appearance...")
+            Image(systemName: "sparkles")
+                    .font(.system(size: 70))
+                    .padding()
             Spacer()
         }
     }
@@ -57,6 +60,9 @@ struct TemperatureUnitDescriptionView: View {
                     .padding(.top, 68)
                     .padding(.bottom, -10)
             Text("Description for the temperature unit...")
+            Image(systemName: "thermometer.medium")
+                    .font(.system(size: 70))
+                    .padding()
             Spacer()
         }
     }
@@ -73,6 +79,9 @@ struct CurrentLocationDescriptionView: View {
                     .padding(.top, 68)
                     .padding(.bottom, -10)
             Text("Description for the current location...")
+            Image(systemName: "location.fill")
+                    .font(.system(size: 70))
+                    .padding()
             Spacer()
         }
     }
