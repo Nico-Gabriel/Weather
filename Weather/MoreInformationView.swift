@@ -40,12 +40,45 @@ struct AppearanceDescriptionView: View {
                     .padding()
                     .padding(.top, 68)
                     .padding(.bottom, -10)
-            Text("Description for the appearance...")
+            Text("Choose between a light and a dark appearance, or pick the automatic mode " +
+                    "which sets a style for you depending on the position of the sun.")
+                    .multilineTextAlignment(.center)
+                    .padding(.leading)
+                    .padding(.trailing)
             Image(systemName: "sparkles")
                     .font(.system(size: 70))
                     .padding()
+                    .padding(.bottom, 8)
+            HStack {
+                ModePreviewView(lightMode: true)
+                ModePreviewView(lightMode: false)
+            }
             Spacer()
         }
+    }
+}
+
+struct ModePreviewView: View {
+
+    let lightMode: Bool
+
+    var body: some View {
+        VStack {
+            Rectangle()
+                    .frame(width: 135, height: 240)
+                    .overlay {
+                        LinearGradient(
+                                gradient: Gradient(colors: lightMode ? [lightblue, lightpink] : [darkgray, lightgray]),
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing)
+                        Image(systemName: lightMode ? "sun.max.fill" : "moon.fill")
+                                .renderingMode(.original)
+                                .font(.system(size: 50))
+                    }
+                    .cornerRadius(24)
+            Text(lightMode ? "light mode" : "dark mode")
+        }
+                .padding(lightMode ? .trailing : .leading)
     }
 }
 
