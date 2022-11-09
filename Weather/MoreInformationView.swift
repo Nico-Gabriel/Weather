@@ -12,7 +12,7 @@ struct MoreInformationView: View {
         VStack {
             TabView {
                 AppearanceDescriptionView()
-                TemperatureUnitDescriptionView()
+                TemperatureUnitDescriptionView(lightMode: lightMode)
                 CurrentLocationDescriptionView()
             }
                     .tabViewStyle(.page)
@@ -50,31 +50,29 @@ struct AppearanceDescriptionView: View {
                     .padding()
                     .padding(.bottom, 8)
             HStack {
-                ModePreviewView(lightMode: true)
-                ModePreviewView(lightMode: false)
+                AppearancePreviewView(lightMode: true)
+                AppearancePreviewView(lightMode: false)
             }
             Spacer()
         }
     }
 }
 
-struct ModePreviewView: View {
+struct AppearancePreviewView: View {
 
     let lightMode: Bool
 
     var body: some View {
         VStack {
-            Rectangle()
+            ZStack {
+                LinearGradient(gradient: Gradient(colors: lightMode ? [lightblue, lightpink] : [darkgray, lightgray]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing)
+                Image(systemName: lightMode ? "sun.max.fill" : "moon.fill")
+                        .renderingMode(.original)
+                        .font(.system(size: 50))
+            }
                     .frame(width: 135, height: 240)
-                    .overlay {
-                        LinearGradient(
-                                gradient: Gradient(colors: lightMode ? [lightblue, lightpink] : [darkgray, lightgray]),
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing)
-                        Image(systemName: lightMode ? "sun.max.fill" : "moon.fill")
-                                .renderingMode(.original)
-                                .font(.system(size: 50))
-                    }
                     .cornerRadius(24)
             Text(lightMode ? "light mode" : "dark mode")
         }
@@ -84,6 +82,8 @@ struct ModePreviewView: View {
 
 struct TemperatureUnitDescriptionView: View {
 
+    let lightMode: Bool
+
     var body: some View {
         VStack {
             Text("Temperature unit")
@@ -92,11 +92,53 @@ struct TemperatureUnitDescriptionView: View {
                     .padding()
                     .padding(.top, 68)
                     .padding(.bottom, -10)
-            Text("Description for the temperature unit...")
+            Text("Select the unit in which the temperature should be displayed. You can choose " +
+                    "between degrees Celsius, degrees Fahrenheit and degrees Kelvin.")
+                    .multilineTextAlignment(.center)
+                    .padding(.leading)
+                    .padding(.trailing)
             Image(systemName: "thermometer.medium")
                     .font(.system(size: 70))
                     .padding()
+                    .padding(.bottom, 10)
+            HStack {
+                TemperatureUnitPreviewView(lightMode: lightMode, temperatureUnit: "Celsius", temperature: 27)
+                TemperatureUnitPreviewView(lightMode: lightMode, temperatureUnit: "Fahrenheit", temperature: 81)
+                        .padding(.horizontal)
+                TemperatureUnitPreviewView(lightMode: lightMode, temperatureUnit: "Kelvin", temperature: 300)
+            }
             Spacer()
+        }
+    }
+}
+
+struct TemperatureUnitPreviewView: View {
+
+    let lightMode: Bool
+    let temperatureUnit: String
+    let temperature: Int
+
+    var body: some View {
+        VStack {
+            ZStack {
+                LinearGradient(gradient: Gradient(colors: lightMode ? [lightblue, lightpink] : [darkgray, lightgray]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing)
+                VStack {
+                    Image(systemName: "cloud.sun.fill")
+                            .renderingMode(.original)
+                            .font(.system(size: 40))
+                            .padding(.top, 8)
+                    Text("\(temperature)°")
+                            .foregroundColor(.white)
+                            .font(.system(size: 24, weight: .medium))
+                            .padding(.top, 4)
+                }
+            }
+                    .frame(width: 100, height: 120)
+                    .cornerRadius(24)
+            Text(temperatureUnit)
+            Text("°" + temperatureUnit.prefix(1))
         }
     }
 }
