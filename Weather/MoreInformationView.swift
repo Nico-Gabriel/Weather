@@ -153,10 +153,14 @@ struct CurrentLocationDescriptionView: View {
                     .padding()
                     .padding(.top, 68)
                     .padding(.bottom, -10)
-            Text("Description for the current location...")
+            Text("We use your current location to get the weather data for your actual position (allow this in your settings).")
+                    .multilineTextAlignment(.center)
+                    .padding(.leading)
+                    .padding(.trailing)
             Image(systemName: "location.fill")
                     .font(.system(size: 70))
                     .padding()
+                    .padding(.bottom, 8)
             Spacer()
         }
     }
